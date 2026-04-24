@@ -1,0 +1,8 @@
+{
+  "name": "UrbanElite Karnataka",
+  "description": "Premium, professional home services platform exclusively for Karnataka with a focus on quality, elite maintenance, and urban lifestyle management.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": []
+}
