@@ -63,8 +63,8 @@ export default function Navbar({ location, onLocationClick }) {
         </div> */}
         <div className="flex items-center gap-5">
           <Link to="/" className="flex flex-col items-start leading-tight group">
-            <div className="flex items-center gap-1">
-              <img src={logo} alt="Logo" className="w-30 h-10 object-contain"  />
+            <div className="flex items-center gap-5">
+              <img src={logo} alt="Logo" className="w-20 h-20 object-contain"  />
               <span className={cn(
                 "text-2xl font-bold tracking-tight transition-colors text-white",
               )}>All In One Home Service</span>
