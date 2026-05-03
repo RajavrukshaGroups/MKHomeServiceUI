@@ -185,7 +185,7 @@ export default function RelatedServicesSection({ currentServiceId, currentParent
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-0.5 bg-stone-300 rounded-full" />
             <h2 className="text-2xl font-serif font-light tracking-wide text-stone-800">
-              Other Services You Might Like
+              Other Services
             </h2>
             <div className="flex-1 h-0.5 bg-gradient-to-r from-stone-300/70 to-transparent rounded-full" />
           </div>

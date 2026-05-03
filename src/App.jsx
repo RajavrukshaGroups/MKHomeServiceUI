@@ -33,6 +33,9 @@ import ServiceDetail from './pages/ServiceDetail';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import BookingSlot from "./components/services/BookingSlot";
+
+
 
 export default function App() {
   const { pathname } = useLocation();
@@ -49,6 +52,7 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/services" element={<Services />} />
       <Route path="/service/:id" element={<ServiceDetail />} />
+      <Route path="/booking/:serviceId" element={<BookingSlot />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
