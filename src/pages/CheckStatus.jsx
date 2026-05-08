@@ -1,0 +1,222 @@
+import React, { useState } from 'react';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+import { Search, Package, Calendar, Clock, MapPin, User, Phone, CheckCircle2, AlertCircle, X } from 'lucide-react';
+import { cn } from '../lib/utils';
+import { formatDateDisplay, formatTimeRange } from '../components/services/BookingSlot';
+
+const CheckStatus = () => {
+  const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [booking, setBooking] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    const searchQuery = query.trim();
+    if (!searchQuery) return;
+
+    setLoading(true);
+    setError(null);
+    setBooking(null);
+
+    try {
+      const response = await fetch(`http://localhost:12000/client/get-booking?search=${encodeURIComponent(searchQuery)}`);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || "No booking found with this ID or Mobile Number.");
+      }
+
+      if (data.success && data.data) {
+        setBooking(data.data);
+      } else {
+        setError(data.message || "No booking found with this ID or Mobile Number.");
+      }
+    } catch (err) {
+      console.error("Search error:", err);
+      setError(err.message || "Network error. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClear = () => {
+    setQuery('');
+    setBooking(null);
+    setError(null);
+  };
+
+  const getStatusColor = (status) => {
+    const s = status?.toLowerCase() || '';
+    if (s.includes('pending')) return 'bg-amber-100 text-amber-700 border-amber-200';
+    if (s.includes('confirm')) return 'bg-blue-100 text-blue-700 border-blue-200';
+    if (s.includes('complete')) return 'bg-green-100 text-green-700 border-green-200';
+    if (s.includes('cancel')) return 'bg-red-100 text-red-700 border-red-200';
+    return 'bg-stone-100 text-stone-700 border-stone-200';
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-white via-stone-50 to-amber-50/20">
+      <Navbar />
+      
+      <main className="max-w-4xl mx-auto px-4 pt-32 pb-20">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-serif text-stone-800 mb-4">Track Your Booking</h1>
+          <p className="text-stone-500 max-w-md mx-auto">
+            Enter your Booking ID or registered Mobile Number to see the latest status of your service requests.
+          </p>
+        </div>
+
+        {/* Search Bar */}
+        <div className="bg-white p-2 rounded-2xl shadow-xl shadow-stone-200/50 border border-stone-100 mb-12">
+          <form onSubmit={handleSearch} className="flex gap-2">
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Ex: BK123456 or 9876543210"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="w-full pl-12 pr-12 py-4 rounded-xl border-none focus:ring-2 focus:ring-amber-500/20 bg-stone-50 text-stone-800 font-medium"
+              />
+              {query && (
+                <button 
+                  type="button"
+                  onClick={handleClear}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-stone-200 rounded-full text-stone-400 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-8 py-4 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold transition-all disabled:bg-stone-200 flex items-center gap-2"
+            >
+              {loading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : "Track"}
+            </button>
+          </form>
+        </div>
+
+        {/* Error State */}
+        {error && (
+          <div className="bg-red-50 border border-red-100 rounded-2xl p-6 text-center animate-in fade-in slide-in-from-bottom-4">
+            <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-3" />
+            <p className="text-red-800 font-medium">{error}</p>
+          </div>
+        )}
+
+        {/* Booking Details */}
+        {booking && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-8">
+            {/* Header Info */}
+            <div className="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm flex flex-wrap justify-between items-center gap-6">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest">Booking ID</span>
+                  <div className={cn("px-3 py-1 rounded-full text-[10px] font-bold uppercase border", getStatusColor(booking.bookingStatus))}>
+                    {booking.bookingStatus}
+                  </div>
+                </div>
+                <h2 className="text-2xl font-serif text-stone-800">{booking.bookingId}</h2>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-1 block">Grand Total</span>
+                <span className="text-3xl font-serif font-bold text-amber-700">₹{booking.grandTotal?.toLocaleString()}</span>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Customer Info */}
+              <div className="md:col-span-1 space-y-6">
+                <div className="bg-white rounded-3xl p-6 border border-stone-100 shadow-sm">
+                  <h3 className="text-xs font-extrabold text-amber-700 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <User className="w-4 h-4" /> Customer Details
+                  </h3>
+                  <div className="space-y-4 text-sm text-stone-600">
+                    <div>
+                      <p className="text-[10px] text-stone-400 uppercase font-bold mb-1">Name</p>
+                      <p className="font-medium text-stone-800">{booking.customer?.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-stone-400 uppercase font-bold mb-1">Phone</p>
+                      <p className="font-medium text-stone-800">{booking.customer?.phone}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-stone-400 uppercase font-bold mb-1">Address</p>
+                      <p className="font-medium text-stone-800 leading-relaxed">{booking.customer?.address}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Services Info */}
+              <div className="md:col-span-2 space-y-6">
+                <div className="bg-white rounded-3xl p-6 border border-stone-100 shadow-sm">
+                  <h3 className="text-xs font-extrabold text-amber-700 uppercase tracking-widest mb-6 flex items-center gap-2">
+                    <Package className="w-4 h-4" /> Booked Services
+                  </h3>
+                  <div className="space-y-6">
+                    {booking.services?.map((svc, idx) => (
+                      <div key={idx} className="flex flex-col pb-6 border-b border-stone-50 last:border-0 last:pb-0 gap-4">
+                        <div className="flex justify-between items-start">
+                          <div className="space-y-2">
+                            <h4 className="font-bold text-stone-800">{svc.serviceName}</h4>
+                            <div className="flex flex-wrap gap-4 text-xs">
+                              <span className="flex items-center gap-1.5 text-blue-600 font-medium bg-blue-50 px-2.5 py-1 rounded-lg">
+                                <Calendar className="w-3.5 h-3.5" />
+                                {formatDateDisplay(svc.selectedDate)}
+                              </span>
+                              <span className="flex items-center gap-1.5 text-green-600 font-medium bg-green-50 px-2.5 py-1 rounded-lg">
+                                <Clock className="w-3.5 h-3.5" />
+                                {formatTimeRange(svc.selectedSlot?.time)}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-sm font-bold text-amber-700">₹{svc.totalPrice?.toLocaleString()}</span>
+                          </div>
+                        </div>
+
+                        {/* Selected Price Options */}
+                        {svc.selectedPriceOptions && svc.selectedPriceOptions.length > 0 && (
+                          <div className="ml-4 space-y-2 border-l-2 border-stone-100 pl-4">
+                            {svc.selectedPriceOptions.map((opt, oIdx) => (
+                              <div key={oIdx} className="flex justify-between items-center text-[11px]">
+                                <span className="text-stone-500 font-medium">{opt.title}</span>
+                                <span className="text-stone-400">₹{opt.price?.toLocaleString()}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-stone-800 rounded-3xl p-8 text-white flex items-center justify-between overflow-hidden relative">
+              <div className="relative z-10">
+                <h3 className="text-xl font-serif mb-2">Need help with your booking?</h3>
+                <p className="text-stone-400 text-sm">Contact our 24/7 support for any modifications or queries.</p>
+              </div>
+              <div className="relative z-10">
+                <a href="tel:+911234567890" className="px-6 py-3 bg-white text-stone-900 rounded-xl font-bold hover:bg-amber-50 transition-colors flex items-center gap-2">
+                  <Phone className="w-4 h-4" /> Call Support
+                </a>
+              </div>
+              <CheckCircle2 className="absolute -right-8 -bottom-8 w-48 h-48 text-white/5" />
+            </div>
+          </div>
+        )}
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default CheckStatus;

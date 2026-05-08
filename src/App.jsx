@@ -26,19 +26,20 @@
 
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import Home from './pages/Home';
 import Services from './pages/Services';
 import ServiceDetail from './pages/ServiceDetail';
 import Cart from './pages/Cart';
+import CheckStatus from './pages/CheckStatus';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import BookingSlot from "./components/services/BookingSlot";
 
-
-
 export default function App() {
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     window.scrollTo({
@@ -54,6 +55,7 @@ export default function App() {
       <Route path="/service/:id" element={<ServiceDetail />} />
       <Route path="/booking/:serviceId" element={<BookingSlot />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/check-status" element={<CheckStatus />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
     </Routes>
