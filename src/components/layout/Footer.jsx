@@ -73,7 +73,7 @@ export default function Footer() {
 
         <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500">
-            © 2026 UrbanElite Home Service. All rights reserved.
+            © 2026 MK Home Service. All rights reserved.
           </p>
           <div className="flex gap-8 text-[11px] font-bold uppercase tracking-widest text-slate-500">
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
