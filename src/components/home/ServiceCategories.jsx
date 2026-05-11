@@ -1847,7 +1847,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { 
   X, 
   Search, 
@@ -1986,8 +1986,11 @@ const PremiumSkeleton = () => (
 // ============================================================
 // Main Component
 // ============================================================
+
+
 export default function ServiceCategories() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -1995,8 +1998,16 @@ export default function ServiceCategories() {
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showAllServices, setShowAllServices] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || "");
   const [hoveredService, setHoveredService] = useState(null);
+
+  // Sync with URL parameter
+  useEffect(() => {
+    const query = searchParams.get('q');
+    if (query !== null) {
+      setSearchQuery(query);
+    }
+  }, [searchParams]);
 
   // Fetch data
   useEffect(() => {
@@ -2140,7 +2151,7 @@ export default function ServiceCategories() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-serif font-light tracking-tight text-stone-800"
+            className="text-4xl md:text-6xl lg:text-7xl font-serif font-light tracking-tight text-[#02194aff]"
           >
             Our Service Catalogue
           </motion.h1>
@@ -2173,7 +2184,15 @@ export default function ServiceCategories() {
               type="text"
               placeholder="Search for a service..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearchQuery(val);
+                if (val.trim()) {
+                  setSearchParams({ q: val.trim() });
+                } else {
+                  setSearchParams({});
+                }
+              }}
               className="w-full pl-12 pr-5 py-4 bg-white/70 backdrop-blur-sm border border-stone-200 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-300/60 focus:border-amber-300 shadow-sm text-stone-700 placeholder-stone-400 transition"
             />
             {searchQuery && (

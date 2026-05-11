@@ -80,16 +80,37 @@
 //   );
 // }
 
+import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import heroImg from '../../assets/hero-img.png';
 
 export default function Hero() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState(new URLSearchParams(location.search).get('q') || "");
+
+  // Sync with URL parameter
+  useEffect(() => {
+    const query = new URLSearchParams(location.search).get('q');
+    if (query !== null) {
+      setSearchQuery(query);
+    } else {
+      setSearchQuery("");
+    }
+  }, [location.search]);
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/services?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/services');
+    }
+  };
 
   return (
-    <section className="relative h-[85vh] min-h-[600px] flex items-center pt-12 justify-center overflow-hidden">
+    <section className="relative h-[85vh] min-h-[600px] flex items-center pt-32 justify-center overflow-hidden">
       {/* Background with overlay */}
       <div className="absolute inset-0 z-0">
         <img 
@@ -114,7 +135,7 @@ export default function Hero() {
             <span className="">EVERY</span> <span className="text-[#D3AF37]">DAY</span>.
           </h1>
           <p className="text-lg md:text-xl text-white/70 mb-12 max-w-lg font-medium leading-relaxed">
-            Professional cleaning, repairs, and home maintenance delivered with precision. Trustworthy service for every home in Karnataka.
+            Professional cleaning, repairs, and home maintenance delivered with precision. Trustworthy service for every home in Bangalore.
           </p>
 
           <div className="flex flex-col md:flex-row gap-4 bg-white/10 backdrop-blur-2xl p-2.5 rounded-[2rem] border border-white/20 shadow-2xl max-w-xl group">
@@ -124,10 +145,15 @@ export default function Hero() {
                 type="text" 
                 placeholder="What can we help you with today?" 
                 className="bg-transparent border-none outline-none text-white placeholder:text-white/30 w-full font-bold uppercase tracking-tight text-sm"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSearch();
+                }}
               />
             </div>
             <button 
-              onClick={() => navigate('/services')}
+              onClick={handleSearch}
               className="bg-accent hover:bg-accent-dark text-white px-10 py-4 rounded-[1.5rem] font-black uppercase tracking-widest transition-all duration-300 shadow-xl shadow-black/20 text-xs active:scale-95"
             >
               Book Service
@@ -136,10 +162,10 @@ export default function Hero() {
 
           <div className="mt-8 flex flex-wrap gap-4">
             <span className="text-white/60 text-sm font-semibold">Popular:</span>
-            {['Deep Cleaning', 'Electrician', 'AC Service', 'Salon'].map((tag) => (
+            {['Deep Cleaning', 'Painting',].map((tag) => (
               <button 
                 key={tag} 
-                onClick={() => navigate('/services')}
+                onClick={() => navigate(`/services?q=${encodeURIComponent(tag)}`)}
                 className="text-xs font-semibold bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-full backdrop-blur-md transition-colors border border-white/10"
               >
                 {tag}

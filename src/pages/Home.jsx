@@ -7,6 +7,9 @@ import LocationModal from '../components/common/LocationModal';
 import { ShieldCheck, Clock, CheckCircle, Smartphone } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
+import MKHomeServicesAbout from '../components/home/about';
+import MKHomeServicesStandard from '../components/home/MKHomeServicesStandard';
+import HomeServiceFlow from '../components/home/HomeServiceFlow';
 
 export default function Home() {
   const [selectedCity, setSelectedCity] = useState(null);
@@ -37,12 +40,18 @@ export default function Home() {
       
       <main>
         <Hero />
-        
+        <MKHomeServicesAbout />
         <ServiceCategories />
         
-        <FeaturedServices />
+        {/* <FeaturedServices /> */}
 
-        <section className="py-32 bg-background-app relative overflow-hidden">
+       
+
+        <HomeServiceFlow />
+
+        <MKHomeServicesStandard />
+
+        {/* <section className="py-32 bg-background-app relative overflow-hidden">
           <div className="absolute bottom-0 left-0 w-full h-[50%] bg-primary/5 skew-y-3 translate-y-32" />
           
           <div className="max-w-7xl mx-auto px-4 relative z-10">
@@ -83,16 +92,16 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
       </main>
 
       <Footer />
 
-      <LocationModal 
+      {/* <LocationModal 
         isOpen={isLocationModalOpen} 
         onSelect={handleCitySelect} 
-      />
+      /> */}
     </div>
   );
 }

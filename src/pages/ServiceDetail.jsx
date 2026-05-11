@@ -1222,6 +1222,65 @@ export default function ServiceDetails() {
                   </ul>
                 </div>
               )}
+
+              {/* CUSTOMER REVIEWS */}
+              {service.feedbacks && service.feedbacks.length > 0 && (
+                <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-amber-100/50">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2">
+                      <Star className="w-5 h-5 text-amber-600 fill-amber-600" />
+                      <h3 className="font-serif text-xl">Customer Reviews</h3>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm bg-amber-50 px-3 py-1 rounded-full border border-amber-100">
+                      <span className="font-bold text-amber-700">{service.rating}</span>
+                      <span className="text-stone-400">/ 5.0</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    {service.feedbacks.map((fb, idx) => (
+                      <div key={idx} className="border-b border-stone-100 last:border-0 pb-6 last:pb-0 group">
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-100 to-stone-100 flex items-center justify-center text-amber-700 font-bold text-sm border border-white shadow-sm">
+                              {fb.author.charAt(0)}
+                            </div>
+                            <div>
+                              <p className="font-bold text-stone-800 text-sm group-hover:text-amber-700 transition-colors">
+                                {fb.author}
+                              </p>
+                              <div className="flex items-center gap-0.5 mt-0.5">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`w-3 h-3 ${
+                                      i < fb.rating
+                                        ? "text-amber-400 fill-amber-400"
+                                        : "text-stone-200 fill-stone-200"
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-[10px] text-stone-400 font-medium uppercase tracking-wider">
+                            {new Date(fb.createdAt).toLocaleDateString(undefined, {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </span>
+                        </div>
+                        <div className="relative">
+                          <p className="text-sm text-stone-600 italic leading-relaxed pl-4 border-l-2 border-amber-100 group-hover:border-amber-400 transition-colors">
+                            "{fb.review}"
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </motion.div>
 
             {/* RIGHT COLUMN – options */}

@@ -59,7 +59,7 @@ const FirstStep = ({
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-xl font-serif text-stone-800">{serviceName}</h3>
-                      <p className="text-[10px] text-amber-700 font-bold uppercase tracking-widest mt-1">Booking Configuration</p>
+                      <p className="text-[10px] text-blue-800 font-extrabold uppercase tracking-widest mt-1">Booking Configuration</p>
                     </div>
                     <div className="flex items-center gap-1">
                       <button

@@ -8,7 +8,7 @@ import { formatDateDisplay, formatTimeRange } from '../components/services/Booki
 const CheckStatus = () => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
-  const [booking, setBooking] = useState(null);
+  const [bookings, setBookings] = useState([]);
   const [error, setError] = useState(null);
 
   const handleSearch = async (e) => {
@@ -18,7 +18,7 @@ const CheckStatus = () => {
 
     setLoading(true);
     setError(null);
-    setBooking(null);
+    setBookings([]);
 
     try {
       const response = await fetch(`http://localhost:12000/client/get-booking?search=${encodeURIComponent(searchQuery)}`);
@@ -28,10 +28,27 @@ const CheckStatus = () => {
         throw new Error(data.message || "No booking found with this ID or Mobile Number.");
       }
 
-      if (data.success && data.data) {
-        setBooking(data.data);
-      } else {
+      // Debug log to see exactly what the server is sending
+      console.log("Booking Search API Response:", data);
+
+      // Flexible handling for different API response structures
+      const responseData = data.data || data.bookings || (Array.isArray(data) ? data : null);
+      
+      // If we got data back (either in .data, .bookings, or as a raw array)
+      if (responseData) {
+        const results = Array.isArray(responseData) ? responseData : [responseData];
+        if (results.length === 0) {
+          setError("No bookings found for this search.");
+        } else {
+          setBookings(results);
+          // If the backend sent a 'total' count, we can use it, otherwise use the array length
+          const count = data.total || results.length;
+          console.log(`Successfully loaded ${count} booking(s).`);
+        }
+      } else if (data.success === false) {
         setError(data.message || "No booking found with this ID or Mobile Number.");
+      } else {
+        setError("Unexpected response format from server.");
       }
     } catch (err) {
       console.error("Search error:", err);
@@ -43,7 +60,7 @@ const CheckStatus = () => {
 
   const handleClear = () => {
     setQuery('');
-    setBooking(null);
+    setBookings([]);
     setError(null);
   };
 
@@ -54,6 +71,24 @@ const CheckStatus = () => {
     if (s.includes('complete')) return 'bg-green-100 text-green-700 border-green-200';
     if (s.includes('cancel')) return 'bg-red-100 text-red-700 border-red-200';
     return 'bg-stone-100 text-stone-700 border-stone-200';
+  };
+
+  const getWorkProgressColor = (status) => {
+    const s = status?.toLowerCase() || '';
+    if (s.includes('pending')) return 'bg-stone-100 text-stone-600 border-stone-200';
+    if (s.includes('progress') || s.includes('started')) return 'bg-blue-50 text-blue-700 border-blue-100';
+    if (s.includes('complete') || s.includes('finished')) return 'bg-green-50 text-green-700 border-green-100';
+    if (s.includes('cancel')) return 'bg-red-50 text-red-700 border-red-100';
+    return 'bg-stone-100 text-stone-600 border-stone-200';
+  };
+
+  const getPaymentStatusColor = (status) => {
+    const s = status?.toLowerCase() || '';
+    if (s.includes('paid')) return 'bg-green-50 text-green-700 border-green-100';
+    if (s.includes('pending') || s.includes('unpaid')) return 'bg-amber-50 text-amber-700 border-amber-100';
+    if (s.includes('partial')) return 'bg-blue-50 text-blue-700 border-blue-100';
+    if (s.includes('refund')) return 'bg-red-50 text-red-700 border-red-100';
+    return 'bg-stone-100 text-stone-600 border-stone-200';
   };
 
   return (
@@ -75,7 +110,7 @@ const CheckStatus = () => {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Ex: BK123456 or 9876543210"
+                placeholder="Enter the Booking ID or Mobile Number Ex: BK123456 or 9876543210"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="w-full pl-12 pr-12 py-4 rounded-xl border-none focus:ring-2 focus:ring-amber-500/20 bg-stone-50 text-stone-800 font-medium"
@@ -108,10 +143,20 @@ const CheckStatus = () => {
           </div>
         )}
 
-        {/* Booking Details */}
-        {booking && (
-          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-8">
-            {/* Header Info */}
+        {/* Results Counter */}
+        {bookings.length > 1 && (
+          <div className="mb-6 flex items-center gap-2 text-stone-500 bg-white/50 backdrop-blur-sm px-4 py-2 rounded-full border border-stone-200 w-fit animate-in fade-in slide-in-from-left-4">
+            <Package className="w-4 h-4 text-amber-600" />
+            <span className="text-sm font-medium">Found <span className="font-bold text-stone-800">{bookings.length}</span> bookings matching your search</span>
+          </div>
+        )}
+
+        {/* Bookings List */}
+        {bookings.length > 0 && (
+          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8">
+            {bookings.map((booking, bIdx) => (
+              <div key={booking._id || bIdx} className="space-y-6 pb-12 border-b border-stone-200 last:border-0">
+                {/* Header Info */}
             <div className="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm flex flex-wrap justify-between items-center gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-2">
@@ -165,6 +210,7 @@ const CheckStatus = () => {
                           <div className="space-y-2">
                             <h4 className="font-bold text-stone-800">{svc.serviceName}</h4>
                             <div className="flex flex-wrap gap-4 text-xs">
+                              <div className="flex flex-row gap-2">
                               <span className="flex items-center gap-1.5 text-blue-600 font-medium bg-blue-50 px-2.5 py-1 rounded-lg">
                                 <Calendar className="w-3.5 h-3.5" />
                                 {formatDateDisplay(svc.selectedDate)}
@@ -173,6 +219,20 @@ const CheckStatus = () => {
                                 <Clock className="w-3.5 h-3.5" />
                                 {formatTimeRange(svc.selectedSlot?.time)}
                               </span>
+                              </div>
+                              <div className="flex flex-row gap-2">
+                              {svc.workProgress && (
+                                <span className={cn("flex items-center gap-1.5 font-bold border px-2.5 py-1 rounded-lg uppercase text-[10px] tracking-wider", getWorkProgressColor(svc.workProgress))}>
+                                  <span className='text-black'>Work Progress:</span> {svc.workProgress}
+                                </span>
+                              )}
+                              {svc.paymentStatus && (
+                                <span className={cn("flex items-center gap-1.5 font-bold border px-2.5 py-1 rounded-lg uppercase text-[10px] tracking-wider", getPaymentStatusColor(svc.paymentStatus))}>
+                                  <span className='text-black font-bold'>Payment Status:</span>{svc.paymentStatus}
+                                </span>
+                              )}
+                               </div>
+
                             </div>
                           </div>
                           <div className="text-right">
@@ -198,7 +258,10 @@ const CheckStatus = () => {
               </div>
             </div>
             
-            <div className="bg-stone-800 rounded-3xl p-8 text-white flex items-center justify-between overflow-hidden relative">
+           
+              </div>
+            ))}
+             <div className="bg-stone-800 rounded-3xl p-8 text-white flex items-center justify-between overflow-hidden relative">
               <div className="relative z-10">
                 <h3 className="text-xl font-serif mb-2">Need help with your booking?</h3>
                 <p className="text-stone-400 text-sm">Contact our 24/7 support for any modifications or queries.</p>

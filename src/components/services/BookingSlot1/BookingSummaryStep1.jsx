@@ -12,7 +12,12 @@ const BookingSummaryStep1 = ({
   return (
     <div className="space-y-6">
       <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-amber-100/50 sticky top-6 shadow-sm">
-        <h3 className="font-serif text-xl text-stone-800 mb-6 border-b border-stone-100 pb-3">Booking Summary</h3>
+        <div className="flex justify-between items-center mb-6 border-b border-stone-100 pb-3">
+          <h3 className="font-serif text-xl text-stone-800">Booking Summary</h3>
+          <span className="px-3 py-1 bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wider rounded-full border border-green-200">
+            Active
+          </span>
+        </div>
         
         <div className="space-y-6 text-sm">
           {/* Services List */}

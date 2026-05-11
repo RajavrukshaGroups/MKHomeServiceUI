@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
             <a href="/" className="text-2xl font-black text-white tracking-tighter uppercase">
-              All In One <span className="text-accent font-extrabold">Home </span> Service
+              MK <span className="text-accent font-extrabold">Home </span> Service
             </a>
             <p className="text-[13px] leading-relaxed font-medium">
               Your one-stop solution for all home services. We provide professional, reliable, and affordable services at your doorstep across Karnataka.
@@ -31,11 +31,12 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-black uppercase text-xs tracking-widest mb-8">Quick Links</h4>
             <ul className="space-y-4 text-[13px] font-bold">
-              <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Our Services</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Partner with Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
+              {/* <li><a href="#" className="hover:text-white transition-colors">About Us</a></li> */}
+              <li><a href="/services" className="hover:text-white transition-colors">Our Services</a></li>
+              <li><a href="/check-status" className="hover:text-white transition-colors">Track Booking</a></li>
+              {/* <li><a href="#" className="hover:text-white transition-colors">Partner with Us</a></li> */}
+              {/* <li><a href="#" className="hover:text-white transition-colors">Careers</a></li> */}
+              {/* <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li> */}
             </ul>
           </div>
 

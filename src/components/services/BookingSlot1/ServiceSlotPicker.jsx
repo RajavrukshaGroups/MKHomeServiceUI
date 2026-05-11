@@ -90,7 +90,7 @@ const ServiceSlotPicker = ({ serviceId, selectedDate, selectedSlot, onDateChange
     <div className="mt-4 pt-4 border-t border-stone-100">
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-bold text-amber-700 uppercase tracking-wider mb-2 flex items-center gap-2">
+          <label className="block text-xs font-bold text-blue-800 uppercase tracking-wider mb-2 flex items-center gap-2">
             <Calendar className="w-3 h-3" /> Select Date
           </label>
           <input
@@ -104,7 +104,7 @@ const ServiceSlotPicker = ({ serviceId, selectedDate, selectedSlot, onDateChange
 
         {selectedDate && (
           <div>
-            <label className="block text-xs font-bold text-amber-700 uppercase tracking-wider mb-2 flex items-center gap-2">
+            <label className="block text-xs font-bold text-blue-800 uppercase tracking-wider mb-2 flex items-center gap-2">
               <Clock className="w-3 h-3" /> Time Slot
             </label>
             {loading ? (

@@ -1029,7 +1029,8 @@ export default function BookingSlot() {
         email: customer.email,
         address: customer.address,
       },
-      allActiveBookings: allActiveBookings // Pass the raw array from Redux
+      allActiveBookings: allActiveBookings, // Pass the raw array from Redux
+      isActive: true,
     };
 
    
@@ -1050,7 +1051,7 @@ export default function BookingSlot() {
         dispatch(resetBookingState());
         
         alert(`Booking Confirmed. Track your booking using Booking ID: ${data.bookingId} or Mobile Number: ${customer.phone}`);
-        navigate("/booking-success", { state: { booking: data.booking } });
+        navigate("/check-status", { state: { booking: data.booking } });
       } else {
         alert(data.message || "Failed to create booking. Please try again.");
       }
