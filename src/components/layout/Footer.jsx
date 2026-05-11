@@ -34,6 +34,7 @@ export default function Footer() {
               {/* <li><a href="#" className="hover:text-white transition-colors">About Us</a></li> */}
               <li><a href="/services" className="hover:text-white transition-colors">Our Services</a></li>
               <li><a href="/check-status" className="hover:text-white transition-colors">Track Booking</a></li>
+              
               {/* <li><a href="#" className="hover:text-white transition-colors">Partner with Us</a></li> */}
               {/* <li><a href="#" className="hover:text-white transition-colors">Careers</a></li> */}
               {/* <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li> */}
