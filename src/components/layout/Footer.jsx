@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
             <a href="/" className="text-2xl font-black text-white tracking-tighter uppercase">
-              MK <span className="text-accent font-extrabold">Home </span> Service
+              <span className="text-accent font-extrabold">MK </span>Home Service
             </a>
             <p className="text-[13px] leading-relaxed font-medium">
               Your one-stop solution for all home services. We provide professional, reliable, and affordable services at your doorstep across Karnataka.

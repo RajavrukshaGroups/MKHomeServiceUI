@@ -14,7 +14,8 @@ const ServiceSlotPicker = ({ serviceId, selectedDate, selectedSlot, onDateChange
   useEffect(() => {
     const fetchAllSlots = async () => {
       try {
-        const res = await fetch(`http://localhost:12000/client/send-time-slot/${serviceId}`);
+        // const res = await fetch(`http://localhost:12000/client/send-time-slot/${serviceId}`);
+        const res = await fetch(`https://server.mkhomeservice.in/client/send-time-slot/${serviceId}`);
         const data = await res.json();
         setAllTimeSlots(data?.data || []);
       } catch (err) {

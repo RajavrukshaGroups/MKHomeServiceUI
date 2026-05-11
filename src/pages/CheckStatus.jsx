@@ -21,7 +21,8 @@ const CheckStatus = () => {
     setBookings([]);
 
     try {
-      const response = await fetch(`http://localhost:12000/client/get-booking?search=${encodeURIComponent(searchQuery)}`);
+      // const response = await fetch(`http://localhost:12000/client/get-booking?search=${encodeURIComponent(searchQuery)}`);
+      const response = await fetch(`https://server.mkhomeservice.in/client/get-booking?search=${encodeURIComponent(searchQuery)}`);
       const data = await response.json();
       
       if (!response.ok) {
@@ -105,12 +106,12 @@ const CheckStatus = () => {
 
         {/* Search Bar */}
         <div className="bg-white p-2 rounded-2xl shadow-xl shadow-stone-200/50 border border-stone-100 mb-12">
-          <form onSubmit={handleSearch} className="flex gap-2">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
             <div className="flex-1 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="Enter the Booking ID or Mobile Number Ex: BK123456 or 9876543210"
+                placeholder="Enter Booking ID or Mobile Number"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="w-full pl-12 pr-12 py-4 rounded-xl border-none focus:ring-2 focus:ring-amber-500/20 bg-stone-50 text-stone-800 font-medium"
@@ -153,125 +154,121 @@ const CheckStatus = () => {
 
         {/* Bookings List */}
         {bookings.length > 0 && (
-          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8">
+          <div className="space-y-8 md:space-y-12 animate-in fade-in slide-in-from-bottom-8">
             {bookings.map((booking, bIdx) => (
               <div key={booking._id || bIdx} className="space-y-6 pb-12 border-b border-stone-200 last:border-0">
                 {/* Header Info */}
-            <div className="bg-white rounded-3xl p-8 border border-stone-100 shadow-sm flex flex-wrap justify-between items-center gap-6">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest">Booking ID</span>
-                  <div className={cn("px-3 py-1 rounded-full text-[10px] font-bold uppercase border", getStatusColor(booking.bookingStatus))}>
-                    {booking.bookingStatus}
-                  </div>
-                </div>
-                <h2 className="text-2xl font-serif text-stone-800">{booking.bookingId}</h2>
-              </div>
-              <div className="text-right">
-                <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-1 block">Grand Total</span>
-                <span className="text-3xl font-serif font-bold text-amber-700">₹{booking.grandTotal?.toLocaleString()}</span>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              {/* Customer Info */}
-              <div className="md:col-span-1 space-y-6">
-                <div className="bg-white rounded-3xl p-6 border border-stone-100 shadow-sm">
-                  <h3 className="text-xs font-extrabold text-amber-700 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <User className="w-4 h-4" /> Customer Details
-                  </h3>
-                  <div className="space-y-4 text-sm text-stone-600">
-                    <div>
-                      <p className="text-[10px] text-stone-400 uppercase font-bold mb-1">Name</p>
-                      <p className="font-medium text-stone-800">{booking.customer?.name}</p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-stone-400 uppercase font-bold mb-1">Phone</p>
-                      <p className="font-medium text-stone-800">{booking.customer?.phone}</p>
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-stone-400 uppercase font-bold mb-1">Address</p>
-                      <p className="font-medium text-stone-800 leading-relaxed">{booking.customer?.address}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Services Info */}
-              <div className="md:col-span-2 space-y-6">
-                <div className="bg-white rounded-3xl p-6 border border-stone-100 shadow-sm">
-                  <h3 className="text-xs font-extrabold text-amber-700 uppercase tracking-widest mb-6 flex items-center gap-2">
-                    <Package className="w-4 h-4" /> Booked Services
-                  </h3>
-                  <div className="space-y-6">
-                    {booking.services?.map((svc, idx) => (
-                      <div key={idx} className="flex flex-col pb-6 border-b border-stone-50 last:border-0 last:pb-0 gap-4">
-                        <div className="flex justify-between items-start">
-                          <div className="space-y-2">
-                            <h4 className="font-bold text-stone-800">{svc.serviceName}</h4>
-                            <div className="flex flex-wrap gap-4 text-xs">
-                              <div className="flex flex-row gap-2">
-                              <span className="flex items-center gap-1.5 text-blue-600 font-medium bg-blue-50 px-2.5 py-1 rounded-lg">
-                                <Calendar className="w-3.5 h-3.5" />
-                                {formatDateDisplay(svc.selectedDate)}
-                              </span>
-                              <span className="flex items-center gap-1.5 text-green-600 font-medium bg-green-50 px-2.5 py-1 rounded-lg">
-                                <Clock className="w-3.5 h-3.5" />
-                                {formatTimeRange(svc.selectedSlot?.time)}
-                              </span>
-                              </div>
-                              <div className="flex flex-row gap-2">
-                              {svc.workProgress && (
-                                <span className={cn("flex items-center gap-1.5 font-bold border px-2.5 py-1 rounded-lg uppercase text-[10px] tracking-wider", getWorkProgressColor(svc.workProgress))}>
-                                  <span className='text-black'>Work Progress:</span> {svc.workProgress}
-                                </span>
-                              )}
-                              {svc.paymentStatus && (
-                                <span className={cn("flex items-center gap-1.5 font-bold border px-2.5 py-1 rounded-lg uppercase text-[10px] tracking-wider", getPaymentStatusColor(svc.paymentStatus))}>
-                                  <span className='text-black font-bold'>Payment Status:</span>{svc.paymentStatus}
-                                </span>
-                              )}
-                               </div>
-
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-sm font-bold text-amber-700">₹{svc.totalPrice?.toLocaleString()}</span>
-                          </div>
-                        </div>
-
-                        {/* Selected Price Options */}
-                        {svc.selectedPriceOptions && svc.selectedPriceOptions.length > 0 && (
-                          <div className="ml-4 space-y-2 border-l-2 border-stone-100 pl-4">
-                            {svc.selectedPriceOptions.map((opt, oIdx) => (
-                              <div key={oIdx} className="flex justify-between items-center text-[11px]">
-                                <span className="text-stone-500 font-medium">{opt.title}</span>
-                                <span className="text-stone-400">₹{opt.price?.toLocaleString()}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                <div className="bg-white rounded-3xl p-6 md:p-8 border border-stone-100 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                  <div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest">Booking ID</span>
+                      <div className={cn("px-3 py-1 rounded-full text-[10px] font-bold uppercase border", getStatusColor(booking.bookingStatus))}>
+                        {booking.bookingStatus}
                       </div>
-                    ))}
+                    </div>
+                    <h2 className="text-xl md:text-2xl font-serif text-stone-800 break-all">{booking.bookingId}</h2>
+                  </div>
+                  <div className="md:text-right w-full md:w-auto pt-4 md:pt-0 border-t md:border-0 border-stone-50">
+                    <span className="text-[10px] font-extrabold text-stone-400 uppercase tracking-widest mb-1 block">Grand Total</span>
+                    <span className="text-2xl md:text-3xl font-serif font-bold text-amber-700">₹{booking.grandTotal?.toLocaleString()}</span>
                   </div>
                 </div>
-              </div>
-            </div>
-            
-           
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Customer Info */}
+                  <div className="md:col-span-1 space-y-6">
+                    <div className="bg-white rounded-3xl p-6 border border-stone-100 shadow-sm h-full">
+                      <h3 className="text-xs font-extrabold text-amber-700 uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <User className="w-4 h-4" /> Customer Details
+                      </h3>
+                      <div className="space-y-4 text-sm text-stone-600">
+                        <div>
+                          <p className="text-[10px] text-stone-400 uppercase font-bold mb-1">Name</p>
+                          <p className="font-medium text-stone-800">{booking.customer?.name}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-stone-400 uppercase font-bold mb-1">Phone</p>
+                          <p className="font-medium text-stone-800">{booking.customer?.phone}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-stone-400 uppercase font-bold mb-1">Address</p>
+                          <p className="font-medium text-stone-800 leading-relaxed">{booking.customer?.address}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Services Info */}
+                  <div className="md:col-span-2 space-y-6">
+                    <div className="bg-white rounded-3xl p-6 border border-stone-100 shadow-sm h-full">
+                      <h3 className="text-xs font-extrabold text-amber-700 uppercase tracking-widest mb-6 flex items-center gap-2">
+                        <Package className="w-4 h-4" /> Booked Services
+                      </h3>
+                      <div className="space-y-8">
+                        {booking.services?.map((svc, idx) => (
+                          <div key={idx} className="flex flex-col pb-8 border-b border-stone-50 last:border-0 last:pb-0 gap-4">
+                            <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                              <div className="space-y-3 flex-1">
+                                <h4 className="text-lg font-bold text-stone-800 leading-tight">{svc.serviceName}</h4>
+                                <div className="flex flex-wrap gap-2 md:gap-3">
+                                  <span className="flex items-center gap-1.5 text-blue-600 font-medium bg-blue-50 px-2.5 py-1 rounded-lg text-[11px] md:text-xs">
+                                    <Calendar className="w-3.5 h-3.5" />
+                                    {formatDateDisplay(svc.selectedDate)}
+                                  </span>
+                                  <span className="flex items-center gap-1.5 text-green-600 font-medium bg-green-50 px-2.5 py-1 rounded-lg text-[11px] md:text-xs">
+                                    <Clock className="w-3.5 h-3.5" />
+                                    {formatTimeRange(svc.selectedSlot?.time)}
+                                  </span>
+                                </div>
+                                <div className="flex flex-wrap gap-2 md:gap-3">
+                                  {svc.workProgress && (
+                                    <span className={cn("flex items-center gap-1.5 font-bold border px-2.5 py-1 rounded-lg uppercase text-[9px] md:text-[10px] tracking-wider", getWorkProgressColor(svc.workProgress))}>
+                                      <span className='text-stone-500 font-medium'>Progress:</span> {svc.workProgress}
+                                    </span>
+                                  )}
+                                  {svc.paymentStatus && (
+                                    <span className={cn("flex items-center gap-1.5 font-bold border px-2.5 py-1 rounded-lg uppercase text-[9px] md:text-[10px] tracking-wider", getPaymentStatusColor(svc.paymentStatus))}>
+                                      <span className='text-stone-500 font-medium'>Payment:</span> {svc.paymentStatus}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="sm:text-right">
+                                <span className="text-lg font-bold text-amber-700">₹{svc.totalPrice?.toLocaleString()}</span>
+                              </div>
+                            </div>
+
+                            {/* Selected Price Options */}
+                            {svc.selectedPriceOptions && svc.selectedPriceOptions.length > 0 && (
+                              <div className="ml-2 sm:ml-4 space-y-2 border-l-2 border-stone-100 pl-4">
+                                {svc.selectedPriceOptions.map((opt, oIdx) => (
+                                  <div key={oIdx} className="flex justify-between items-center text-[11px] md:text-xs">
+                                    <span className="text-stone-500 font-medium">{opt.title}</span>
+                                    <span className="text-stone-400 font-mono">₹{opt.price?.toLocaleString()}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
-             <div className="bg-stone-800 rounded-3xl p-8 text-white flex items-center justify-between overflow-hidden relative">
-              <div className="relative z-10">
+            
+            <div className="bg-stone-800 rounded-3xl p-6 md:p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
+              <div className="relative z-10 text-center md:text-left">
                 <h3 className="text-xl font-serif mb-2">Need help with your booking?</h3>
                 <p className="text-stone-400 text-sm">Contact our 24/7 support for any modifications or queries.</p>
               </div>
-              <div className="relative z-10">
-                <a href="tel:+911234567890" className="px-6 py-3 bg-white text-stone-900 rounded-xl font-bold hover:bg-amber-50 transition-colors flex items-center gap-2">
+              <div className="relative z-10 w-full md:w-auto">
+                <a href="tel:+911234567890" className="w-full md:w-auto px-6 py-3 bg-white text-stone-900 rounded-xl font-bold hover:bg-amber-50 transition-colors flex items-center justify-center gap-2">
                   <Phone className="w-4 h-4" /> Call Support
                 </a>
               </div>
-              <CheckCircle2 className="absolute -right-8 -bottom-8 w-48 h-48 text-white/5" />
+              <CheckCircle2 className="absolute -right-8 -bottom-8 w-48 h-48 text-white/5 pointer-events-none" />
             </div>
           </div>
         )}

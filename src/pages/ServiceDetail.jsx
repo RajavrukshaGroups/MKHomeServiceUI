@@ -967,7 +967,8 @@ export default function ServiceDetails() {
     const fetchService = async () => {
       try {
         setLoading(true);
-         const res = await fetch(`http://localhost:12000/client/send-services-client/${id}`);
+        //  const res = await fetch(`http://localhost:12000/client/send-services-client/${id}`);
+        const res = await fetch(`https://server.mkhomeservice.in/client/send-services-client/${id}`);
         if (!res.ok) throw new Error("Failed to fetch");
         const result = await res.json();
         if (!result.success) throw new Error(result.message || "Not found");
@@ -1151,7 +1152,7 @@ export default function ServiceDetails() {
             className="flex items-center gap-2 text-stone-500 hover:text-amber-600 mb-8 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition" />
-            <span>Back to catalogue</span>
+            <span className='text-lg font-medium text-stone-800'>Back to catalogue</span>
           </button>
           <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
             {/* LEFT COLUMN – images & details */}
@@ -1160,7 +1161,11 @@ export default function ServiceDetails() {
               animate={{ opacity: 1, x: 0 }}
               className="space-y-6"
             >
+               <h1 className="text-3xl md:text-4xl font-serif font-light text-[#032042ff]">
+                  {service.name}
+                </h1>
               <div className="aspect-square rounded-2xl overflow-hidden bg-stone-100 shadow-sm">
+                
                 <img
                   src={service.images?.[0]}
                   alt={service.name}
@@ -1180,9 +1185,9 @@ export default function ServiceDetails() {
                 </div>
               )}
               <div>
-                <h1 className="text-3xl md:text-4xl font-serif font-light text-stone-800">
+                {/* <h1 className="text-3xl md:text-4xl font-serif font-light text-stone-800">
                   {service.name}
-                </h1>
+                </h1> */}
                 <div className="flex items-center gap-4 mt-2">
                   <div className="flex items-center gap-1.5 bg-stone-100 px-3 py-1.5 rounded-full">
                     <Star className="w-4 h-4 fill-amber-400 text-amber-400" />

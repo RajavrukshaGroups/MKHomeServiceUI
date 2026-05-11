@@ -820,7 +820,9 @@ export default function BookingSlot() {
     hasFetchedServiceRef.current = true;
     const fetchService = async () => {
       try {
-        const res = await fetch(`http://localhost:12000/client/send-services-client/${serviceId}`);
+        // const res = await fetch(`http://localhost:12000/client/send-services-client/${serviceId}`);
+        const res = await fetch(`https://server.mkhomeservice.in/client/send-services-client/${serviceId}`);
+
         const data = await res.json();
         if (data.success) {
           dispatch(setService(data.data));
@@ -853,7 +855,8 @@ export default function BookingSlot() {
     hasFetchedAllSlotsRef.current = true;
     const fetchAllSlots = async () => {
       try {
-        const res = await fetch(`http://localhost:12000/client/send-time-slot/${serviceId}`);
+        // const res = await fetch(`http://localhost:12000/client/send-time-slot/${serviceId}`);
+        const res = await fetch(`https://server.mkhomeservice.in/client/send-time-slot/${serviceId}`);
         const data = await res.json();
         dispatch(setAllTimeSlots(data?.data || []));
       } catch (err) {
@@ -1036,7 +1039,8 @@ export default function BookingSlot() {
    
 
     try {
-      const response = await fetch("http://localhost:12000/client/create-booking", {
+      // const response = await fetch("http://localhost:12000/client/create-booking", {
+      const response = await fetch("https://server.mkhomeservice.in/client/create-booking", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -2016,7 +2016,8 @@ export default function ServiceCategories() {
       try {
         setLoading(true);
         const res = await fetch(
-          "http://localhost:12000/client/send-services-client",
+        // "http://localhost:12000/client/send-services-client",
+          "https://server.mkhomeservice.in/client/send-services-client",
           { signal: abortController.signal }
         );
         if (!res.ok) throw new Error("Unable to load services");
@@ -2193,7 +2194,7 @@ export default function ServiceCategories() {
                   setSearchParams({});
                 }
               }}
-              className="w-full pl-12 pr-5 py-4 bg-white/70 backdrop-blur-sm border border-stone-200 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-300/60 focus:border-amber-300 shadow-sm text-stone-700 placeholder-stone-400 transition"
+              className="w-full pl-12 pr-5 py-3 md:py-4 bg-white/70 backdrop-blur-sm border border-stone-200 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-300/60 focus:border-amber-300 shadow-sm text-stone-700 placeholder-stone-400 transition"
             />
             {searchQuery && (
               <button
@@ -2206,7 +2207,7 @@ export default function ServiceCategories() {
           </div>
           <button
             onClick={handleClearAll}
-            className="flex items-center gap-2 px-6 py-4 bg-white/70 backdrop-blur-sm border border-stone-200 rounded-full hover:bg-stone-50 hover:border-stone-300 transition text-stone-600 text-sm font-medium shadow-sm"
+            className="flex flex-row hidden md:flex items-center gap-2 px-6 py-4 bg-white/70 backdrop-blur-sm border border-stone-200 rounded-full hover:bg-stone-50 hover:border-stone-300 transition text-stone-600 text-sm font-medium shadow-sm"
           >
             <X size={16} />
             Reset Filters
@@ -2218,9 +2219,9 @@ export default function ServiceCategories() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="mb-16"
+          className="mb-10 md:mb-16"
         >
-          <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+          <div className="flex flex-wrap gap-2 md:gap-3 justify-center md:justify-start">
             {categories.map((cat, idx) => {
               const isSelected =
                 (cat._id === "all-services" && showAllServices) ||
@@ -2236,7 +2237,7 @@ export default function ServiceCategories() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: idx * 0.02 }}
                   className={`
-                    relative px-7 py-2.5 rounded-full font-medium transition-all duration-300
+                    relative md:text-sm text-xs md:px-7 px-2 md:py-2.5 py-1 rounded-full md:font-medium font-light transition-all duration-300
                     ${isSelected 
                       ? "bg-amber-600 text-white shadow-lg shadow-amber-200/50" 
                       : "bg-white/60 backdrop-blur-sm text-stone-600 hover:bg-amber-50 border border-stone-200"
@@ -2323,7 +2324,7 @@ export default function ServiceCategories() {
                   {/* Category Header */}
                   <div className="flex items-center gap-5 mb-10">
                     <div className="w-12 h-0.5 bg-amber-300/70 rounded-full" />
-                    <h2 className="text-2xl md:text-3xl font-serif font-light tracking-wide text-stone-800">
+                    <h2 className="text-xl md:text-3xl font-serif font-light tracking-wide text-stone-800">
                       {group.categoryName}
                     </h2>
                     <div className="flex-1 h-0.5 bg-gradient-to-r from-amber-300/70 to-transparent rounded-full" />
@@ -2348,13 +2349,13 @@ export default function ServiceCategories() {
                           className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl border border-amber-100/60 overflow-hidden cursor-pointer transition-all duration-500"
                         >
                           {/* Image Container */}
-                          <div className="relative h-64 overflow-hidden bg-gradient-to-br from-stone-100 to-amber-50/30">
+                          <div className="relative max-h-64 overflow-hidden bg-gradient-to-br from-stone-100 to-amber-50/30">
                             <img
                               src={
-                                service.images?.[0] ||
-                                "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&auto=format"
+                                service.images?.[0] 
+                                // alt={service.name}
                               }
-                              alt={service.name}
+                              
                               className="w-full h-full object-cover transition duration-700 group-hover:scale-105"
                               onError={(e) => {
                                 e.target.onerror = null;
@@ -2476,7 +2477,7 @@ export default function ServiceCategories() {
         </AnimatePresence>
 
         {/* Trust Footer */}
-        <div className="mt-28 pt-12 border-t border-amber-100/50">
+        <div className="mt-28 hidden md:block pt-12 border-t border-amber-100/50">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <div className="text-center">
               <div className="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">

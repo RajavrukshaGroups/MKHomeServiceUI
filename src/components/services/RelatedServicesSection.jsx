@@ -100,7 +100,8 @@ export default function RelatedServicesSection({ currentServiceId, currentParent
     const fetchAllServices = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:12000/client/send-services-client");
+        // const response = await fetch("http://localhost:12000/client/send-services-client");
+        const response = await fetch("https://server.mkhomeservice.in/client/send-services-client");
         const result = await response.json();
 
         if (result.success) {

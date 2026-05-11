@@ -110,7 +110,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative h-[85vh] min-h-[600px] flex items-center pt-32 justify-center overflow-hidden">
+    <section className="relative h-[85vh] min-h-[600px] flex items-center pt-12 md:pt-32 justify-center overflow-hidden">
       {/* Background with overlay */}
       <div className="absolute inset-0 z-0">
         <img 
@@ -128,7 +128,7 @@ export default function Hero() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6 }}
-          className="max-w-3xl pt-15 md:pt-0 lg:pt-0 xl:pt-0"
+          className="max-w-3xl pt-0 md:pt-0 lg:pt-0 xl:pt-0"
         >
           <h1 className="text-2xl  md:text-6xl font-display font-black text-white mb-8 leading-[0.85] uppercase tracking-tighter">
             <span className="text-[#D3AF37]">RELIABLE</span> SOLUTIONS<br />

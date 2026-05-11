@@ -35,7 +35,8 @@ export default function Navbar({ location, onLocationClick }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:12000/client/send-services-client");
+        // const res = await fetch("http://localhost:12000/client/send-services-client");
+        const res = await fetch("https://server.mkhomeservice.in/client/send-services-client");
         const result = await res.json();
         if (result.success) {
           setDbData(result.data.filter(item => item.isActive));
@@ -407,7 +408,7 @@ export default function Navbar({ location, onLocationClick }) {
       )}>
         <div className="flex flex-col h-full pt-32 px-8 pb-12">
           {/* Mobile Location */}
-          <button 
+          {/* <button 
             onClick={() => {
               setIsMenuOpen(false);
               onLocationClick();
@@ -421,7 +422,7 @@ export default function Navbar({ location, onLocationClick }) {
               <span className="text-[10px] text-white/50 font-bold uppercase tracking-wider">Your Location</span>
               <span className="text-base font-bold">{location || 'Select Area'}</span>
             </div>
-          </button>
+          </button> */}
           
           {/* Mobile Search */}
           <div className="relative mb-10 group" ref={searchRef}>
@@ -486,7 +487,7 @@ export default function Navbar({ location, onLocationClick }) {
                 className="group flex items-center justify-between"
                 style={{ transitionDelay: `${idx * 50}ms` }}
               >
-                <span className="text-4xl font-black uppercase tracking-tighter text-white/40 group-hover:text-accent transition-colors">
+                <span className="text-xl  tracking-tighter text-white/90 group-hover:text-accent transition-colors">
                   {link.label}
                 </span>
                 <ChevronDown className="w-8 h-8 text-white/10 -rotate-90 group-hover:text-accent transition-all" />
@@ -503,7 +504,7 @@ export default function Navbar({ location, onLocationClick }) {
               Book A Service
             </Link>
             <div className="flex items-center justify-center gap-8 py-6">
-               <span className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold italic">MK Home Services © 2024</span>
+               <span className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold italic">MK Home Services © 2026</span>
             </div>
           </div>
         </div>
