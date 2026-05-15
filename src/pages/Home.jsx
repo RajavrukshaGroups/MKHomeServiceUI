@@ -1,15 +1,16 @@
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Hero from '../components/home/Hero';
-import ServiceCategories from '../components/home/ServiceCategories';
 import FeaturedServices from '../components/home/FeaturedServices';
 import LocationModal from '../components/common/LocationModal';
 import { ShieldCheck, Clock, CheckCircle, Smartphone } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useState, useEffect } from 'react';
 import MKHomeServicesAbout from '../components/home/about';
 import MKHomeServicesStandard from '../components/home/MKHomeServicesStandard';
 import HomeServiceFlow from '../components/home/HomeServiceFlow';
+
+const ServiceCategories = lazy(() => import('../components/home/ServiceCategories'));
 
 export default function Home() {
   const [selectedCity, setSelectedCity] = useState(null);
@@ -41,7 +42,9 @@ export default function Home() {
       <main>
         <Hero />
         <MKHomeServicesAbout />
-        <ServiceCategories />
+        <Suspense fallback={<div className="py-20 text-center text-stone-400">Loading services...</div>}>
+          <ServiceCategories hideHero={true} />
+        </Suspense>
         
         {/* <FeaturedServices /> */}
 

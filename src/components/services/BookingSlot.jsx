@@ -646,6 +646,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { ArrowLeft, Calendar } from "lucide-react";
+import API from "../../api/axios";
 import {
   setService,
   setPriceOptions,
@@ -820,10 +821,8 @@ export default function BookingSlot() {
     hasFetchedServiceRef.current = true;
     const fetchService = async () => {
       try {
-        // const res = await fetch(`http://localhost:12000/client/send-services-client/${serviceId}`);
-        const res = await fetch(`https://server.mkhomeservice.in/client/send-services-client/${serviceId}`);
-
-        const data = await res.json();
+        const response = await API.get(`/client/send-services-client/${serviceId}`);
+        const data = response.data;
         if (data.success) {
           dispatch(setService(data.data));
           let stdOptions = [];
@@ -855,9 +854,8 @@ export default function BookingSlot() {
     hasFetchedAllSlotsRef.current = true;
     const fetchAllSlots = async () => {
       try {
-        // const res = await fetch(`http://localhost:12000/client/send-time-slot/${serviceId}`);
-        const res = await fetch(`https://server.mkhomeservice.in/client/send-time-slot/${serviceId}`);
-        const data = await res.json();
+        const response = await API.get(`/client/send-time-slot/${serviceId}`);
+        const data = response.data;
         dispatch(setAllTimeSlots(data?.data || []));
       } catch (err) {
         console.error(err);
@@ -1039,16 +1037,8 @@ export default function BookingSlot() {
    
 
     try {
-      // const response = await fetch("http://localhost:12000/client/create-booking", {
-      const response = await fetch("https://server.mkhomeservice.in/client/create-booking", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
+      const response = await API.post("/client/create-booking", payload);
+      const data = response.data;
 
       if (data.success) {
         dispatch(setBookingSummary(data.booking));

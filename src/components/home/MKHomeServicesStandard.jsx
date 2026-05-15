@@ -91,8 +91,8 @@ export default function RoyalStandard() {
             className="hidden md:flex flex-col items-end gap-2"
           >
             <div className="flex -space-x-2">
-              {[unknownPerson, unknownPerson, unknownPerson].map((i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-[#fcfaf7] bg-gray-200 overflow-hidden">
+              {[unknownPerson, unknownPerson, unknownPerson].map((i, idx) => (
+                <div key={idx} className="w-10 h-10 rounded-full border-2 border-[#fcfaf7] bg-gray-200 overflow-hidden">
                   <img src={i} alt="user" className="w-full h-full object-cover" />
                 </div>
               ))}

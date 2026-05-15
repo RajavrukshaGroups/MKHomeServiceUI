@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
+import API from "../../api/axios";
 import { Star } from "lucide-react";
 
 // ---------- Helper: check if a service is a leaf (no active children) ----------
@@ -44,12 +45,13 @@ const ServiceCard = ({ service, onClick }) => {
     >
       <div className="relative h-40 overflow-hidden bg-stone-100">
         <img
-          src={service.images?.[0] || "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&auto=format"}
+          src={service.images?.[0]}
+          //|| "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&auto=format"
           alt={service.name}
           className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=400&auto=format";
+            //e.target.src = "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=400&auto=format";
           }}
         />
         {/* {service.rating >= 4.5 && (
@@ -100,9 +102,8 @@ export default function RelatedServicesSection({ currentServiceId, currentParent
     const fetchAllServices = async () => {
       try {
         setLoading(true);
-        // const response = await fetch("http://localhost:12000/client/send-services-client");
-        const response = await fetch("https://server.mkhomeservice.in/client/send-services-client");
-        const result = await response.json();
+        const response = await API.get("/client/send-services-client");
+        const result = response.data;
 
         if (result.success) {
           const allItems = result.data;

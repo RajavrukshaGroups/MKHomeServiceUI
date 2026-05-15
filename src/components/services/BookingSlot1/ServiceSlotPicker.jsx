@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import API from "../../../api/axios";
 import { Calendar, Clock } from "lucide-react";
 import { formatTimeRange, isTimeSlotOutdated } from "../BookingSlot";
 
@@ -14,9 +15,8 @@ const ServiceSlotPicker = ({ serviceId, selectedDate, selectedSlot, onDateChange
   useEffect(() => {
     const fetchAllSlots = async () => {
       try {
-        // const res = await fetch(`http://localhost:12000/client/send-time-slot/${serviceId}`);
-        const res = await fetch(`https://server.mkhomeservice.in/client/send-time-slot/${serviceId}`);
-        const data = await res.json();
+        const response = await API.get(`/client/send-time-slot/${serviceId}`);
+        const data = response.data;
         setAllTimeSlots(data?.data || []);
       } catch (err) {
         console.error(err);

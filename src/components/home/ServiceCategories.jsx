@@ -1849,19 +1849,67 @@ import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { 
-  X, 
-  Search, 
-  Star, 
-  Sparkles, 
-  Layers, 
+  Gem,
+  Building2,
+  Bug,
+  Wrench,
+  Paintbrush,
+  Home,
+  ChefHat,
+  Smartphone,
+  Zap,
+  Fan,
+  X,
+  Search,
+  Star,
+  Sparkles,
+  Layers,
   ChevronRight,
   ShieldCheck,
   Clock,
   CreditCard,
   ArrowRight,
-  Gem,
-  Building2
+  Users,
+  Leaf,
+  Bath,
+  Armchair,
+  Grid2x2,
+  BrushCleaning,
+  Building,
+  BedDouble
 } from "lucide-react";
+import HeroSection from "../services/Hero"
+import API from "../../api/axios";
+
+// ============================================================
+// Icon Mapping
+// ============================================================
+const getCategoryIcon = (categoryName) => {
+  const name = categoryName.toLowerCase();
+  if (name.includes('villa') || name.includes('house')) return <Home className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('duplex')) return <Building2 className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('kitchen')) return <ChefHat className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('pest')) return <Bug className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('repair')) return <Wrench className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('paint')) return <Paintbrush className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('electric')) return <Zap className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('bathroom')) return <Bath className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('sofa')) return <Armchair className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  //if (name.includes('cleaning')) return <Sparkles className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('window')) return <Grid2x2 className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('office')) return <Building className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  if (name.includes('mattress')) return <BedDouble className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+  return <Building2 className="w-8 h-8 text-emerald-800" strokeWidth={1.5} />;
+};
+
+const getBadge = (index) => {
+  const badges = [
+    { text: "Trusted Professionals", icon: <ShieldCheck className="w-4 h-4 text-white" /> },
+    { text: "Expert Team", icon: <Users className="w-4 h-4 text-white" /> },
+    { text: "Deep Clean Assurance", icon: <Sparkles className="w-4 h-4 text-white" /> }
+  ];
+  return badges[index % badges.length];
+};
 
 // ============================================================
 // Helper Functions
@@ -1988,7 +2036,9 @@ const PremiumSkeleton = () => (
 // ============================================================
 
 
-export default function ServiceCategories() {
+
+
+export default function ServiceCategories({ hideHero = false }) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -2010,39 +2060,112 @@ export default function ServiceCategories() {
   }, [searchParams]);
 
   // Fetch data
-  useEffect(() => {
-    const abortController = new AbortController();
-    const fetchServices = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(
-        // "http://localhost:12000/client/send-services-client",
-          "https://server.mkhomeservice.in/client/send-services-client",
-          { signal: abortController.signal }
-        );
-        if (!res.ok) throw new Error("Unable to load services");
-        const result = await res.json();
-        if (result.success) {
-          const activeData = result.data.filter((item) => item.isActive);
-          setServices(activeData);
-          const dbCategories = activeData.filter(
-            (item) => item.type === "category" && item.parentId === null
-          );
-          const allCategory = { _id: "all-services", name: "All Services" };
-          setCategories([allCategory, ...dbCategories]);
-        } else {
-          throw new Error(result.message || "Failed to load");
-        }
-      } catch (err) {
-        if (err.name !== "AbortError") setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchServices();
-    return () => abortController.abort();
-  }, []);
+  // useEffect(() => {
+  //   const abortController = new AbortController();
+  //   const fetchServices = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await API.get("/client/send-services-client", {
+  //         signal: abortController.signal,
+  //       });
+  //       const result = response.data;
+  //       if (result.success) {
+  //         const activeData = result.data.filter((item) => item.isActive);
+  //         setServices(activeData);
+  //         const dbCategories = activeData.filter(
+  //           (item) => item.type === "category" && item.parentId === null
+  //         );
+  //         const allCategory = { _id: "all-services", name: "All Services" };
+  //         setCategories([allCategory, ...dbCategories]);
+  //       } else {
+  //         throw new Error(result.message || "Failed to load");
+  //       }
+  //     } catch (err) {
+  //       if (err.name !== "AbortError") setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchServices();
+  //   return () => abortController.abort();
+  // }, []);
 
+  //  useEffect(() => {
+  //   const abortController = new AbortController();
+  //   const fetchServices = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const res = await fetch(
+  //        "http://localhost:12000/client/send-services-client",
+  //        // "https://server.mkhomeservice.in/client/send-services-client",
+  //         { signal: abortController.signal }
+  //       );
+  //       if (!res.ok) throw new Error("Unable to load services");
+  //       const result = await res.json();
+  //       if (result.success) {
+  //         const activeData = result.data.filter((item) => item.isActive);
+  //         setServices(activeData);
+  //         const dbCategories = activeData.filter(
+  //           (item) => item.type === "category" && item.parentId === null
+  //         );
+  //         const allCategory = { _id: "all-services", name: "All Services" };
+  //         setCategories([allCategory, ...dbCategories]);
+  //       } else {
+  //         throw new Error(result.message || "Failed to load");
+  //       }
+  //     } catch (err) {
+  //       if (err.name !== "AbortError") setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchServices();
+  //   return () => abortController.abort();
+  // }, []);
+
+useEffect(() => {
+  const fetchServices = async () => {
+    try {
+      setLoading(true);
+
+      const response = await API.get(
+        "/client/send-services-client"
+      );
+
+      const result = response.data;
+
+      if (result.success) {
+        const activeData = result.data.filter(
+          (item) => item.isActive
+        );
+
+        setServices(activeData);
+
+        const dbCategories = activeData.filter(
+          (item) =>
+            item.type === "category" &&
+            item.parentId === null
+        );
+
+        setCategories([
+          {
+            _id: "all-services",
+            name: "All Services",
+          },
+          ...dbCategories,
+        ]);
+      }
+    } catch (err) {
+      console.log(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchServices();
+}, []);
+  
   const rawGroups = useMemo(() => {
     if (!services.length) return [];
     return buildCategoryGroups(services, categories, selectedCategory, showAllServices);
@@ -2137,7 +2260,12 @@ export default function ServiceCategories() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-amber-50/5 to-stone-50/30">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-gradient-to-br from-white via-amber-50/5 to-stone-50/30"
+    >
       {/* Decorative abstract shapes */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-amber-100/20 rounded-full blur-3xl" />
@@ -2147,30 +2275,7 @@ export default function ServiceCategories() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
         
         {/* Hero Section */}
-        <div className="text-center mb-16">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-serif font-light tracking-tight text-[#02194aff]"
-          >
-            Our Service Catalogue
-          </motion.h1>
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: "80px" }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="h-0.5 bg-gradient-to-r from-amber-300 to-amber-500 mx-auto mt-6"
-          />
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-stone-500 mt-6 max-w-2xl mx-auto text-lg leading-relaxed"
-          >
-            Discover meticulously curated premium services, delivered with unwavering quality and discretion.
-          </motion.p>
-        </div>
+        {!hideHero && <HeroSection />}
 
         {/* Search & Filter */}
         <motion.div
@@ -2336,136 +2441,99 @@ export default function ServiceCategories() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {group.services.map((service, idx) => {
                       const priceInfo = getServicePriceInfo(service);
+                      const badge = getBadge(idx);
                       return (
                         <motion.div
                           key={service._id}
                           initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
                           transition={{ delay: idx * 0.05 }}
                           whileHover={{ y: -8 }}
                           onHoverStart={() => setHoveredService(service._id)}
                           onHoverEnd={() => setHoveredService(null)}
                           onClick={() => navigate(`/service/${service._id}`)}
-                          className="group relative bg-white rounded-2xl shadow-sm hover:shadow-xl border border-amber-100/60 overflow-hidden cursor-pointer transition-all duration-500"
+                          className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl border border-gray-100 overflow-hidden cursor-pointer transition-all duration-500 max-w-sm mx-auto w-full flex flex-col h-full"
                         >
                           {/* Image Container */}
-                          <div className="relative max-h-64 overflow-hidden bg-gradient-to-br from-stone-100 to-amber-50/30">
+                          <div className="relative h-64 overflow-hidden shrink-0">
                             <img
-                              src={
-                                service.images?.[0] 
-                                // alt={service.name}
-                              }
-                              
-                              className="w-full h-full object-cover transition duration-700 group-hover:scale-105"
-                              onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=600&auto=format";
-                              }}
+                              src={service.images?.[0] || "https://images.unsplash.com/photo-1581578731548-c64695cc6954?q=80&w=2070&auto=format&fit=crop"}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
+                            {/* Dynamic Badge */}
+                            <div className="absolute top-4 right-4 bg-[#2d4a43] text-white rounded-lg px-3 py-1.5 flex items-center gap-2 shadow-lg opacity-90">
+                              {badge.icon}
+                              <span className="text-[10px] font-bold tracking-tight">{badge.text}</span>
+                            </div>
                           </div>
 
-                          <div className="p-6">
-                            <h3 className="font-serif text-xl font-medium text-stone-800 group-hover:text-amber-700 transition line-clamp-1">
-                              {service.name}
-                            </h3>
-                            <p className="text-stone-500 text-sm mt-2 leading-relaxed line-clamp-2">
-                              {service.description || "Exceptional service crafted to exceed expectations."}
+                          {/* Floating Category Icon */}
+                          <div className="absolute top-[14rem] left-6 w-16 h-16 bg-[#f8fafc] rounded-2xl flex items-center justify-center border-4 border-white shadow-md z-10">
+                            {getCategoryIcon(service.name || group.categoryName)}
+                          </div>
+
+                          <div className="px-6 pt-10 pb-6 flex-1 flex flex-col">
+                            <div className="mb-4">
+                              <h3 className="text-xl font-bold text-[#1f2937] leading-tight">
+                                {service.name}
+                              </h3>
+                              <div className="w-10 h-[3px] bg-[#fbbf24] mt-3" />
+                            </div>
+
+                            <p className="text-gray-500 text-[13px] leading-relaxed mb-6 line-clamp-2 min-h-[40px]">
+                              {service.description || "Comprehensive professional service tailored to your specific needs and ensuring a healthier environment."}
                             </p>
-                            
-                            {priceInfo.type === "fixed" && (
-                              <div className="mt-5 pt-4 border-t border-stone-100">
-                                <div className="flex justify-between items-center">
-                                  <div>
-                                    <span className="text-xs text-stone-400 uppercase tracking-wider">Investment</span>
-                                    <p className="font-serif text-2xl font-semibold text-amber-700">
-                                      ₹{priceInfo.price.toLocaleString()}
-                                    </p>
-                                  </div>
-                                  <div className="flex items-center gap-1.5 bg-stone-50/80 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                                    <span className="text-sm font-medium text-stone-700">
-                                      {service.rating || "4.9"}
-                                    </span>
-                                    <span className="text-xs text-stone-400">
-                                      ({service.totalReviews || 247})
-                                    </span>
-                                  </div>
+
+                            <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-50">
+                              <div className="space-y-1">
+                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                                  Starting From
+                                </span>
+                                <div className="text-3xl font-bold text-[#0a3622]">
+                                  ₹{priceInfo.minPrice ? priceInfo.minPrice.toLocaleString() : 'N/A'}
                                 </div>
                               </div>
-                            )}
+                              <div className="flex items-center gap-1 bg-[#f9fafb] px-3 py-1.5 rounded-full border border-gray-100">
+                                <Star className="w-4 h-4 fill-[#fbbf24] text-[#fbbf24]" />
+                                <span className="text-sm font-bold text-[#374151]">{service.rating || "5.0"}</span>
+                                <span className="text-xs text-gray-400">({service.totalReviews || 5})</span>
+                              </div>
+                            </div>
 
-                            {priceInfo.type === "options" && (
-                              <div className="mt-5 pt-4 border-t border-stone-100">
-                                <div className="flex justify-between items-start">
-                                  <div>
-                                    <span className="text-xs text-stone-400 uppercase tracking-wider">From</span>
-                                    <p className="font-serif text-2xl font-semibold text-amber-700">
-                                      ₹{priceInfo.minPrice.toLocaleString()}
-                                    </p>
-                                    {priceInfo.variants && priceInfo.variants.length > 0 && (
-                                      <div className="flex flex-wrap gap-1 mt-2">
-                                        {priceInfo.displayVariants.map((variant, vIdx) => (
-                                          <span key={vIdx} className="text-[11px] bg-amber-50 text-stone-600 px-2 py-0.5 rounded-full">
-                                            {variant}
-                                          </span>
-                                        ))}
-                                        {priceInfo.extraCount > 0 && (
-                                          <span className="text-[11px] bg-stone-100 text-stone-500 px-2 py-0.5 rounded-full">
-                                            +{priceInfo.extraCount} more
-                                          </span>
-                                        )}
-                                      </div>
+                            {/* Service Options Tags */}
+                            <div className="flex flex-wrap gap-2 mb-6">
+                               {priceInfo.variants && priceInfo.variants.length > 0 ? (
+                                  <>
+                                    {priceInfo.displayVariants.map((variant, vIdx) => (
+                                      <span key={vIdx} className="text-[11px] font-medium bg-[#f3f4f6] text-[#6b7280] px-3 py-1 rounded-full border border-gray-100">
+                                        {variant}
+                                      </span>
+                                    ))}
+                                    {priceInfo.extraCount > 0 && (
+                                      <span className="text-[11px] font-medium bg-gray-50 text-gray-400 px-3 py-0 rounded-full border border-gray-100">
+                                        +{priceInfo.extraCount} More
+                                      </span>
                                     )}
-                                  </div>
-                                  <div className="flex items-center gap-1.5 bg-stone-50/80 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                                    <span className="text-sm font-medium text-stone-700">
-                                      {service.rating || "4.9"}
-                                    </span>
-                                    <span className="text-xs text-stone-400">
-                                      ({service.totalReviews || 247})
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
+                                  </>
+                               ) : (
+                                  <></>
+                               )}
+                            </div>
 
-                            {priceInfo.type === "custom" && (
-                              <div className="mt-5 pt-4 border-t border-stone-100">
-                                <div className="flex justify-between items-center">
-                                  <div>
-                                    <span className="text-xs text-stone-400 uppercase tracking-wider">Pricing</span>
-                                    <p className="font-serif text-xl font-medium text-amber-700">
-                                      Custom Quote
-                                    </p>
-                                  </div>
-                                  <div className="flex items-center gap-1.5 bg-stone-50/80 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                                    <span className="text-sm font-medium text-stone-700">
-                                      {service.rating || "4.9"}
-                                    </span>
-                                    <span className="text-xs text-stone-400">
-                                      ({service.totalReviews || 247})
-                                    </span>
-                                  </div>
+                            {/* Action Button - Pushed to bottom */}
+                            <div className="mt-auto">
+                              <div className="flex items-center justify-between p-1 pl-6 border border-[#d1d5db] rounded-xl hover:border-[#0a3622] transition-colors duration-300">
+                                <span className="text-[#374151] font-bold text-sm">
+                                  View Details
+                                </span>
+                                <div className="w-10 h-10 bg-[#2d4a43] rounded-lg flex items-center justify-center transition-transform group-hover:translate-x-0.5">
+                                  <ArrowRight className="w-5 h-5 text-white" />
                                 </div>
                               </div>
-                            )}
+                            </div>
                           </div>
-
-                          {/* Elegant Arrow on Hover */}
-                          <motion.div
-                            initial={{ opacity: 0, x: 10 }}
-                            animate={{ 
-                              opacity: hoveredService === service._id ? 1 : 0,
-                              x: hoveredService === service._id ? 0 : 10
-                            }}
-                            transition={{ duration: 0.2 }}
-                            className="absolute bottom-6 right-6 w-9 h-9 bg-amber-100 rounded-full flex items-center justify-center shadow-sm"
-                          >
-                            <ArrowRight className="w-4 h-4 text-amber-700" />
-                          </motion.div>
                         </motion.div>
                       );
                     })}
@@ -2476,33 +2544,51 @@ export default function ServiceCategories() {
           )}
         </AnimatePresence>
 
-        {/* Trust Footer */}
-        <div className="mt-28 hidden md:block pt-12 border-t border-amber-100/50">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ShieldCheck className="w-7 h-7 text-amber-600" />
+        {/* Trust Indicators Bar - Exact Image Style */}
+        <div className="mt-20 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-50 p-8 hidden md:block">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="flex items-center gap-4 px-4 border-r border-gray-100 last:border-0">
+              <div className="w-14 h-14 bg-[#f0f9f6] rounded-full flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-7 h-7 text-[#2d4a43]" />
               </div>
-              <h4 className="font-serif text-lg text-stone-800 mb-1">Rigorous Vetting</h4>
-              <p className="text-stone-400 text-sm">Every expert undergoes a 5-step verification</p>
+              <div>
+                <h4 className="font-bold text-[#1f2937] text-[14px]">Verified Professionals</h4>
+                <p className="text-[11px] text-gray-400 mt-0.5 leading-tight">Background-checked & trained cleaning experts</p>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-7 h-7 text-amber-600" />
+
+            <div className="flex items-center gap-4 px-4 border-r border-gray-100 last:border-0">
+              <div className="w-14 h-14 bg-[#f0f9f6] rounded-full flex items-center justify-center shrink-0">
+                <Leaf className="w-7 h-7 text-[#2d4a43]" />
               </div>
-              <h4 className="font-serif text-lg text-stone-800 mb-1">Guaranteed Punctuality</h4>
-              <p className="text-stone-400 text-sm">On-time delivery or your money back</p>
+              <div>
+                <h4 className="font-bold text-[#1f2937] text-[14px]">Eco-Friendly Products</h4>
+                <p className="text-[11px] text-gray-400 mt-0.5 leading-tight">Safe for your family, pets & the environment</p>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CreditCard className="w-7 h-7 text-amber-600" />
+
+            <div className="flex items-center gap-4 px-4 border-r border-gray-100 last:border-0">
+              <div className="w-14 h-14 bg-[#f0f9f6] rounded-full flex items-center justify-center shrink-0">
+                <Clock className="w-7 h-7 text-[#2d4a43]" />
               </div>
-              <h4 className="font-serif text-lg text-stone-800 mb-1">100% Secure</h4>
-              <p className="text-stone-400 text-sm">Bank-grade encryption & fraud protection</p>
+              <div>
+                <h4 className="font-bold text-[#1f2937] text-[14px]">On-Time Service</h4>
+                <p className="text-[11px] text-gray-400 mt-0.5 leading-tight">Punctual, reliable & hassle-free experience</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 px-4 border-r border-gray-100 last:border-0">
+              <div className="w-14 h-14 bg-[#f0f9f6] rounded-full flex items-center justify-center shrink-0">
+                <Star className="w-7 h-7 text-[#2d4a43]" />
+              </div>
+              <div>
+                <h4 className="font-bold text-[#1f2937] text-[14px]">100% Satisfaction</h4>
+                <p className="text-[11px] text-gray-400 mt-0.5 leading-tight">Quality service you can trust every time</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import API from '../api/axios';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import { Search, Package, Calendar, Clock, MapPin, User, Phone, CheckCircle2, AlertCircle, X } from 'lucide-react';
@@ -21,13 +22,11 @@ const CheckStatus = () => {
     setBookings([]);
 
     try {
-      // const response = await fetch(`http://localhost:12000/client/get-booking?search=${encodeURIComponent(searchQuery)}`);
-      const response = await fetch(`https://server.mkhomeservice.in/client/get-booking?search=${encodeURIComponent(searchQuery)}`);
-      const data = await response.json();
+      const response = await API.get(`/client/get-booking?search=${encodeURIComponent(searchQuery)}`);
+      const data = response.data;
       
-      if (!response.ok) {
-        throw new Error(data.message || "No booking found with this ID or Mobile Number.");
-      }
+      // Axios throws on non-2xx status, so if we're here, it was successful or handled by backend logic
+
 
       // Debug log to see exactly what the server is sending
       console.log("Booking Search API Response:", data);

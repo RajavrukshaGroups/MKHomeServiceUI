@@ -4,6 +4,7 @@ import { cn } from '../../lib/utils';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useCart } from '../../context/CartContext';
+import API from '../../api/axios';
 import { selectAllActiveBookings } from '../../store/bookingSlice';
 import logoImage from '../../assets/logo.png';
 
@@ -35,9 +36,8 @@ export default function Navbar({ location, onLocationClick }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const res = await fetch("http://localhost:12000/client/send-services-client");
-        const res = await fetch("https://server.mkhomeservice.in/client/send-services-client");
-        const result = await res.json();
+        const response = await API.get("/client/send-services-client");
+        const result = response.data;
         if (result.success) {
           setDbData(result.data.filter(item => item.isActive));
         }
@@ -125,8 +125,8 @@ export default function Navbar({ location, onLocationClick }) {
       <nav className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 md:px-12",
         isScrolled 
-          ? "bg-[#020f23ff] backdrop-blur-xl border-b border-white/10 py-3 shadow-2xl" 
-          : "bg-[#020f23ff] py-3"
+          ? "bg-white/90 backdrop-blur-xl border-b border-gray-100 py-2 shadow-sm" 
+          : "bg-white py-3"
       )}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo Section */}
@@ -144,10 +144,10 @@ export default function Navbar({ location, onLocationClick }) {
                 <div className="absolute inset-0 bg-accent/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
               <div className="flex flex-col">
-                <span className="text-white font-black text-lg md:text-xl leading-none tracking-tight uppercase">
+                <span className="text-[#041131] font-black text-lg md:text-xl leading-none tracking-tight uppercase">
                   MK Home
                 </span>
-                <span className="text-accent text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase">
+                <span className="text-[#d8a011ff] text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase">
                   Services
                 </span>
               </div>
@@ -171,27 +171,27 @@ export default function Navbar({ location, onLocationClick }) {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-4">
               {navLinks.map((link) => (
                 <Link 
                   key={link.path}
                   to={link.path} 
                   className={cn(
-                    "relative px-4 py-2 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-300",
+                    "relative px-4 py-2 text-[12px] font-bold uppercase tracking-widest transition-all duration-300",
                     routeLocation.pathname === link.path 
-                      ? "text-accent" 
-                      : "text-white/60 hover:text-white"
+                      ? "text-[#dfa719ff]" 
+                      : "text-[#041131] hover:text-[#dfa81eff]"
                   )}
                 >
                   {link.label}
                   {routeLocation.pathname === link.path && (
-                    <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-accent rounded-full shadow-[0_0_10px_rgba(211,175,55,0.5)]" />
+                    <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-[#daa217ff] rounded-full" />
                   )}
                 </Link>
               ))}
             </div>
             
-            <div className="h-6 w-[1px] bg-white/10" />
+            <div className="h-6 w-[1px] bg-gray-200 mx-2" />
             
             {/* Actions */}
             <div className="flex items-center gap-4">
@@ -204,7 +204,7 @@ export default function Navbar({ location, onLocationClick }) {
               >
                 <button 
                   onClick={() => setIsSearchOpen(!isSearchOpen)}
-                  className="p-2 text-white/60 hover:text-white transition-colors"
+                  className="p-2 text-[#041131] hover:text-[#fbbf24] transition-colors"
                 >
                   <Search className="w-5 h-5" />
                 </button>
@@ -214,7 +214,7 @@ export default function Navbar({ location, onLocationClick }) {
                       autoFocus
                       type="text" 
                       placeholder="Search services..." 
-                      className="bg-transparent border-none outline-none text-white text-xs w-full font-bold uppercase tracking-tight placeholder:text-white/20"
+                      className="bg-transparent border-none outline-none text-[#051849ff] text-xs w-full font-bold uppercase tracking-tight placeholder:text-gray-400"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyDown={(e) => {
@@ -358,12 +358,11 @@ export default function Navbar({ location, onLocationClick }) {
               )} */}
               
               <Link to={cartLink} className="relative group">
-                <div className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-accent group-hover:bg-accent/10 transition-all duration-300 overflow-hidden">
-                  <ShoppingCart className="w-5 h-5 text-white group-hover:text-accent transition-colors" />
-                  <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-5 transition-opacity" />
+                <div className="w-11 h-11 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center hover:bg-gray-100 transition-all duration-300">
+                  <ShoppingCart className="w-5 h-5 text-[#041131]" />
                 </div>
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-accent text-primary text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-black border-2 border-primary-dark shadow-[0_0_15px_rgba(211,175,55,0.4)]">
+                  <span className="absolute -top-2 -right-2 bg-[#fbbf24] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-black">
                     {cartCount}
                   </span>
                 )}
@@ -371,7 +370,7 @@ export default function Navbar({ location, onLocationClick }) {
 
               <Link 
                 to="/services" 
-                className="hidden xl:flex bg-accent hover:bg-white text-primary px-6 py-3 rounded-xl font-black text-[11px] uppercase tracking-widest transition-all shadow-lg shadow-accent/20 hover:shadow-white/20 active:scale-95"
+                className="hidden xl:flex bg-[#d5a21fff] hover:bg-[#0a1d4eff] text-white px-8 py-3 rounded-xl font-bold text-[11px] uppercase tracking-widest transition-all shadow-lg shadow-[#fbbf24]/20 active:scale-95"
               >
                 Book Now
               </Link>
@@ -381,9 +380,9 @@ export default function Navbar({ location, onLocationClick }) {
           {/* Mobile Menu Toggle */}
           <div className="flex items-center gap-4 md:hidden">
             <Link to={cartLink} className="relative p-2">
-              <ShoppingCart className="w-6 h-6 text-white" />
+              <ShoppingCart className="w-6 h-6 text-[#041131]" />
               {cartCount > 0 && (
-                <span className="absolute top-0 right-0 bg-accent text-primary text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-black shadow-lg">
+                <span className="absolute top-0 right-0 bg-[#fbbf24] text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-black shadow-lg">
                   {cartCount}
                 </span>
               )}
@@ -392,7 +391,7 @@ export default function Navbar({ location, onLocationClick }) {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className={cn(
                 "w-10 h-10 flex items-center justify-center rounded-xl transition-all",
-                isMenuOpen ? "bg-accent text-primary" : "bg-white/5 text-white"
+                isMenuOpen ? "bg-[#fbbf24] text-white" : "bg-gray-100 text-[#041131]"
               )}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -403,30 +402,13 @@ export default function Navbar({ location, onLocationClick }) {
 
       {/* Mobile Menu Overlay */}
       <div className={cn(
-        "fixed inset-0 z-40 bg-primary/98 backdrop-blur-2xl transition-all duration-500 md:hidden",
+        "fixed inset-0 z-40 bg-white transition-all duration-500 md:hidden",
         isMenuOpen ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full pointer-events-none"
       )}>
         <div className="flex flex-col h-full pt-32 px-8 pb-12">
-          {/* Mobile Location */}
-          {/* <button 
-            onClick={() => {
-              setIsMenuOpen(false);
-              onLocationClick();
-            }}
-            className="flex items-center gap-4 p-5 rounded-3xl bg-white/5 border border-white/10 text-white mb-10"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-accent/20 flex items-center justify-center">
-              <MapPin className="w-6 h-6 text-accent" />
-            </div>
-            <div className="flex flex-col items-start leading-tight">
-              <span className="text-[10px] text-white/50 font-bold uppercase tracking-wider">Your Location</span>
-              <span className="text-base font-bold">{location || 'Select Area'}</span>
-            </div>
-          </button> */}
-          
           {/* Mobile Search */}
           <div className="relative mb-10 group" ref={searchRef}>
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-accent transition-colors" />
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#fbbf24] transition-colors" />
             <input 
               type="text" 
               placeholder="Search Services..." 
@@ -439,12 +421,12 @@ export default function Navbar({ location, onLocationClick }) {
                   setSearchQuery('');
                 }
               }}
-              className="w-full pl-16 pr-6 py-5 rounded-[2rem] bg-white/5 border border-white/10 text-white font-bold placeholder:text-white/20 focus:outline-none focus:border-accent/50 focus:bg-white/[0.08] transition-all"
+              className="w-full pl-16 pr-6 py-5 rounded-[2rem] bg-gray-50 border border-gray-100 text-[#041131] font-bold placeholder:text-gray-400 focus:outline-none focus:border-[#fbbf24]/50 focus:bg-white transition-all"
             />
             
             {/* Mobile Suggestions */}
             {suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-primary border border-white/10 rounded-3xl shadow-2xl overflow-hidden z-[60] max-h-[50vh] overflow-y-auto no-scrollbar">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-3xl shadow-2xl overflow-hidden z-[60] max-h-[50vh] overflow-y-auto no-scrollbar">
                 {suggestions.map((item) => (
                   <button
                     key={item._id}
@@ -454,20 +436,20 @@ export default function Navbar({ location, onLocationClick }) {
                       setIsMenuOpen(false);
                       setSearchQuery('');
                     }}
-                    className="w-full flex items-center gap-4 p-4 hover:bg-white/5 transition-all border-b border-white/5 last:border-0 text-left"
+                    className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 transition-all border-b border-gray-100 last:border-0 text-left"
                   >
-                    <div className="w-10 h-10 rounded-xl overflow-hidden bg-white/10 flex-shrink-0 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center">
                       {item.images?.[0] ? (
                         <img src={item.images[0]} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <Layers className="w-5 h-5 text-accent" />
+                        <Layers className="w-5 h-5 text-[#fbbf24]" />
                       )}
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-sm font-bold text-white uppercase truncate max-w-[200px] leading-tight">
+                      <span className="text-sm font-bold text-[#041131] uppercase truncate max-w-[200px] leading-tight">
                         {item.name}
                       </span>
-                      <span className="text-[10px] text-accent font-black uppercase tracking-widest mt-0.5">
+                      <span className="text-[10px] text-[#fbbf24] font-black uppercase tracking-widest mt-0.5">
                         Service
                       </span>
                     </div>
@@ -487,10 +469,10 @@ export default function Navbar({ location, onLocationClick }) {
                 className="group flex items-center justify-between"
                 style={{ transitionDelay: `${idx * 50}ms` }}
               >
-                <span className="text-xl  tracking-tighter text-white/90 group-hover:text-accent transition-colors">
+                <span className="text-xl font-bold tracking-tighter text-[#041131] group-hover:text-[#fbbf24] transition-colors uppercase">
                   {link.label}
                 </span>
-                <ChevronDown className="w-8 h-8 text-white/10 -rotate-90 group-hover:text-accent transition-all" />
+                <ChevronDown className="w-8 h-8 text-gray-200 -rotate-90 group-hover:text-[#fbbf24] transition-all" />
               </Link>
             ))}
           </div>
@@ -499,12 +481,12 @@ export default function Navbar({ location, onLocationClick }) {
             <Link 
               to="/services" 
               onClick={() => setIsMenuOpen(false)}
-              className="w-full bg-accent text-primary py-5 rounded-3xl font-black text-center text-sm uppercase tracking-[0.2em] shadow-2xl shadow-accent/30"
+              className="w-full bg-[#fbbf24] text-white py-5 rounded-3xl font-black text-center text-sm uppercase tracking-[0.2em] shadow-xl shadow-[#fbbf24]/20"
             >
               Book A Service
             </Link>
             <div className="flex items-center justify-center gap-8 py-6">
-               <span className="text-white/30 text-[10px] uppercase tracking-[0.3em] font-bold italic">MK Home Services © 2026</span>
+               <span className="text-gray-300 text-[10px] uppercase tracking-[0.3em] font-bold">MK Home Services © 2026</span>
             </div>
           </div>
         </div>

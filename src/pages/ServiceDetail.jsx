@@ -851,6 +851,7 @@ import {
   Gem, ChevronRight, CheckCircle, Phone, MapPin, ListChecks,
   Undo2, History, Plus, Minus
 } from "lucide-react";
+import API from "../api/axios";
 import RelatedServicesSection from "../components/services/RelatedServicesSection";
 import Navbar from "../components/layout/Navbar";
 import {
@@ -967,10 +968,8 @@ export default function ServiceDetails() {
     const fetchService = async () => {
       try {
         setLoading(true);
-        //  const res = await fetch(`http://localhost:12000/client/send-services-client/${id}`);
-        const res = await fetch(`https://server.mkhomeservice.in/client/send-services-client/${id}`);
-        if (!res.ok) throw new Error("Failed to fetch");
-        const result = await res.json();
+        const response = await API.get(`/client/send-services-client/${id}`);
+        const result = response.data;
         if (!result.success) throw new Error(result.message || "Not found");
         const svc = result.data;
         setServiceState(svc);
