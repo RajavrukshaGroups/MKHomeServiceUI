@@ -211,39 +211,17 @@
 // }
 
 
-import { useState, useEffect, lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import HomeServiceFlow from "../components/home/HomeServiceFlow";
-import LocationModal from "../components/common/LocationModal";
 
 const ServiceCategories = lazy(() => import("../components/home/ServiceCategories"));
 
 export default function Services() {
-    const [selectedCity, setSelectedCity] = useState(null);
-    const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-
-    useEffect(() => {
-        const savedLocation = localStorage.getItem('user_location');
-        if (savedLocation) {
-            setSelectedCity(savedLocation);
-        } else {
-            setIsLocationModalOpen(true);
-        }
-    }, []);
-
-    const handleCitySelect = (cityName) => {
-        setSelectedCity(cityName);
-        localStorage.setItem('user_location', cityName);
-        setIsLocationModalOpen(false);
-    };
-
     return (
         <div className="min-h-screen bg-background-app font-sans">
-            <Navbar 
-                location={selectedCity} 
-                onLocationClick={() => setIsLocationModalOpen(true)} 
-            />
+            <Navbar />
             <main>
                 <Suspense fallback={<div className="py-20 text-center text-stone-400">Loading catalogue...</div>}>
                     <ServiceCategories />
@@ -251,12 +229,6 @@ export default function Services() {
                 <HomeServiceFlow />
             </main>
             <Footer />
-            {isLocationModalOpen && (
-                <LocationModal 
-                    isOpen={isLocationModalOpen} 
-                    onSelect={handleCitySelect} 
-                />
-            )}
         </div>
     );
 }

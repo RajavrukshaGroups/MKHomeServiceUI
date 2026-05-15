@@ -1,22 +1,14 @@
 import { X, CheckCircle2, Calendar, Clock, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useEffect, useState } from 'react';
-import LocationModal from './LocationModal';
 
 export default function BookingModal({ service, isOpen, onClose }) {
   const [location, setLocation] = useState('Select Location');
-  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
 
   useEffect(() => {
     const savedLocation = localStorage.getItem('user_location');
     if (savedLocation) setLocation(savedLocation);
   }, [isOpen]);
-
-  const handleLocationUpdate = (newLocation) => {
-    setLocation(newLocation);
-    localStorage.setItem('user_location', newLocation);
-    setIsLocationModalOpen(false);
-  };
 
   if (!service) return null;
 
@@ -140,12 +132,6 @@ export default function BookingModal({ service, isOpen, onClose }) {
                         {location}
                       </p>
                     </div>
-                    <button 
-                      onClick={() => setIsLocationModalOpen(true)}
-                      className="text-[10px] font-black text-accent uppercase tracking-widest hover:underline"
-                    >
-                      Edit
-                    </button>
                   </div>
                 </div>
 
@@ -162,11 +148,6 @@ export default function BookingModal({ service, isOpen, onClose }) {
           </div>
         )}
       </AnimatePresence>
-
-      <LocationModal 
-        isOpen={isLocationModalOpen}
-        onSelect={handleLocationUpdate}
-      />
     </>
   );
 }

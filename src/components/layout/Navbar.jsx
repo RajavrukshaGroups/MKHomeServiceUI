@@ -10,7 +10,7 @@ import logoImage from '../../assets/logo.png';
 
 const logo = logoImage;
 
-export default function Navbar({ location, onLocationClick }) {
+export default function Navbar() {
   const routeLocation = useLocation();
   const navigate = useNavigate();
 
@@ -152,21 +152,6 @@ export default function Navbar({ location, onLocationClick }) {
                 </span>
               </div>
             </Link>
-            
-            {/* Location Selector */}
-            {/* <button 
-              onClick={onLocationClick}
-              className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 transition-all group backdrop-blur-sm"
-            >
-              <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center group-hover:bg-accent/30 transition-colors">
-                <MapPin className="w-4 h-4 text-accent" />
-              </div>
-              <div className="flex flex-col items-start leading-tight pr-2">
-                <span className="text-[10px] text-white/50 font-bold uppercase tracking-wider">Your Location</span>
-                <span className="text-xs text-white font-bold max-w-[120px] truncate">{location || 'Select Area'}</span>
-              </div>
-              <ChevronDown className="w-3 h-3 text-white/30 group-hover:text-accent transition-colors" />
-            </button> */}
           </div>
 
           {/* Desktop Navigation */}
