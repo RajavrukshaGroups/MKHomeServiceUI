@@ -1044,10 +1044,12 @@ export default function ServiceDetails() {
     }
   }, [localSingle, localMulti, service, dispatch]);
 
-  // Clear booking error when selections change
+  // Auto-dismiss booking error after 4 seconds
   useEffect(() => {
-    if (bookingError) setBookingError("");
-  }, [localSingle, localMulti, bookingError]);
+    if (!bookingError) return;
+    const timer = setTimeout(() => setBookingError(""), 4000);
+    return () => clearTimeout(timer);
+  }, [bookingError]);
 
   const handleSingleChange = (idx, val) =>
     setLocalSingle(prev => ({ ...prev, [idx]: val }));
@@ -1570,7 +1572,7 @@ export default function ServiceDetails() {
                   </button>
                 </div>
                 {bookingError && (
-                  <div className="mt-2 text-sm text-red-600 bg-red-50 rounded-lg p-2 text-center">
+                  <div className="mt-4 text-sm font-semibold text-red-500 bg-red-50 border border-red-300 rounded-xl px-4 py-3 text-center shadow-sm" aria-live="assertive">
                     {bookingError}
                   </div>
                 )}
